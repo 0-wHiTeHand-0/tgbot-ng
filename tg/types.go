@@ -5,7 +5,7 @@
 package tg
 
 type Update struct {
-	Ok     bool   `json:"ok"`
+	Ok      bool     `json:"ok"`
 	Results []Result `json:"result"`
 }
 
@@ -17,8 +17,8 @@ type Result struct {
 type Message struct {
 	MessageID int    `json:"message_id"`
 	From      User   `json:"from"`
-	Date int `json:"date"`
-	Chat Chat `json:"chat"`
+	Date      int    `json:"date"`
+	Chat      Chat   `json:"chat"`
 	Text      string `json:"text"`
 }
 

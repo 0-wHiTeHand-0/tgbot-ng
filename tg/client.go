@@ -15,27 +15,27 @@ import (
 const baseURL = "https://api.telegram.org/bot"
 
 type Client struct {
-	Name string
+	Name  string
 	Token string
-	
+
 	lastUpdateID int
 }
 
 func NewClient(name, token string) *Client {
-	return &Client{Name:name, Token:token}
+	return &Client{Name: name, Token: token}
 }
 
 func (c *Client) GetUpdates() (Update, error) {
 	b, err := c.doRequest("getUpdates",
-		url.Values{"offset": {strconv.Itoa(c.lastUpdateID +1)}})
+		url.Values{"offset": {strconv.Itoa(c.lastUpdateID + 1)}})
 	if err != nil {
 		return Update{}, err
-	}	
+	}
 	var update Update
 	if err := json.Unmarshal(b, &update); err != nil {
 		return Update{}, err
 	}
-	for _, r := range(update.Results) {
+	for _, r := range update.Results {
 		if r.UpdateID > c.lastUpdateID {
 			c.lastUpdateID = r.UpdateID
 		}
@@ -50,7 +50,7 @@ func (c *Client) SendMessage(chatID int, t string) error {
 }
 
 func (c *Client) doRequest(command string, data url.Values) (body []byte, err error) {
-	resp, err := http.PostForm(baseURL + c.Token + "/" + command, data)
+	resp, err := http.PostForm(baseURL+c.Token+"/"+command, data)
 	if err != nil {
 		return nil, err
 	}

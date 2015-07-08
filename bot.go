@@ -8,26 +8,29 @@ import (
 	"errors"
 	"log"
 	"time"
-	
+
 	"github.com/jroimartin/tgbot-ng/tg"
 )
 
-
 type bot struct {
-	cli *tg.Client
-	allowedIDs []int
+	cli            *tg.Client
+	allowedIDs     []int
 	updateInterval time.Duration
 }
 
 func newBot(name, token string) *bot {
 	return &bot{
-		cli: tg.NewClient(name, token),
+		cli:            tg.NewClient(name, token),
 		updateInterval: 2 * time.Second,
 	}
 }
 
-func (b *bot) allowIDs(ids []int) {
-	b.allowedIDs = append(b.allowedIDs, ids...)
+func (b *bot) setAllowedIDs(ids []int) {
+	if len(ids) == 0 {
+		return
+	}
+	b.allowedIDs = make([]int, len(ids))
+	copy(b.allowedIDs, ids)
 }
 
 func (b *bot) setUpdateInterval(nseg int) {
@@ -40,7 +43,7 @@ func (b *bot) loop() {
 		if err != nil {
 			log.Println("error:", err)
 		}
-		for _, r := range(update.Results) {
+		for _, r := range update.Results {
 			if err := b.handleResult(r); err != nil {
 				b.cli.SendMessage(r.Message.Chat.ID, err.Error())
 			}
@@ -54,12 +57,13 @@ func (b *bot) handleResult(r tg.Result) error {
 	if !b.isAllowed(r) {
 		return errors.New("Not authorized")
 	}
+	// TODO
 	b.cli.SendMessage(r.Message.Chat.ID, "TODO")
 	return nil
 }
 
 func (b *bot) isAllowed(r tg.Result) bool {
-	for _, aid := range(b.allowedIDs) {
+	for _, aid := range b.allowedIDs {
 		if r.Message.Chat.ID == aid {
 			return true
 		}

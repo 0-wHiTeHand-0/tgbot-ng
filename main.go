@@ -16,15 +16,15 @@ func main() {
 		os.Exit(2)
 	}
 	configFile := os.Args[1]
-	
+
 	cfg, err := parseConfig(configFile)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	
+
 	tgbot := newBot(cfg.Name, cfg.Token)
 	if len(cfg.AllowedIDs) > 0 {
-		tgbot.allowIDs(cfg.AllowedIDs)
+		tgbot.setAllowedIDs(cfg.AllowedIDs)
 	}
 	if cfg.UpdateInterval > 0 {
 		tgbot.setUpdateInterval(cfg.UpdateInterval)
