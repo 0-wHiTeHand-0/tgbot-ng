@@ -35,6 +35,9 @@ func (c *Client) GetUpdates() (Update, error) {
 	if err := json.Unmarshal(b, &update); err != nil {
 		return Update{}, err
 	}
+	if !update.Ok {
+		return Update{}, erros.New("update is not OK")
+	}
 	for _, r := range update.Results {
 		if r.UpdateID > c.lastUpdateID {
 			c.lastUpdateID = r.UpdateID

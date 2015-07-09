@@ -45,7 +45,7 @@ func (b *bot) loop() {
 		}
 		for _, r := range update.Results {
 			if err := b.handleResult(r); err != nil {
-				b.cli.SendMessage(r.Message.Chat.ID, err.Error())
+				log.Println("error:", err)
 			}
 		}
 		time.Sleep(b.updateInterval)
@@ -53,12 +53,11 @@ func (b *bot) loop() {
 }
 
 func (b *bot) handleResult(r tg.Result) error {
-	log.Printf("%+v\n", r)
+	log.Printf("result: %+v\n", r)
 	if !b.isAllowed(r) {
-		return errors.New("Not authorized")
+		return errors.New("not allowed")
 	}
 	// TODO
-	b.cli.SendMessage(r.Message.Chat.ID, "TODO")
 	return nil
 }
 
