@@ -16,7 +16,19 @@ usage: tgbot-ng config
 The following snippet shows a typical config file. A
 complete example can be found at doc/config.json.
 
-TODO
+{
+	"name": "bot_name",
+	"token": "api_token",
+	"update_interval": 1,
+	"allowed_ids": [],
+	"commands": {
+		"ano": {
+			"enabled": true,
+			"search_limit": 10
+		},
+		...
+	}
+}
 ```
 
 ## Installation
