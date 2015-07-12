@@ -62,7 +62,7 @@ func (b *bot) handleUpdate(u tg.Update) {
 	}
 	for _, cmd := range b.commands {
 		if cmd.Match(u.Message.Text) {
-			if err := cmd.Run(u.Message.Chat.ID, u.Message.Text); err != nil {
+			if err := cmd.Run(u.Message.Chat.ID, u.Message.ID, u.Message.Text); err != nil {
 				log.Printf("error: %v\n", err)
 			}
 			break

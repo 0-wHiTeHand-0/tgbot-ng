@@ -20,13 +20,13 @@ type Update struct {
 }
 
 type Message struct {
-	MessageID int         `json:"message_id"`
-	From      User        `json:"from"`
-	Date      int         `json:"date"`
-	Chat      Chat        `json:"chat"`
-	Text      string      `json:"text"`
-	Photo     []PhotoSize `json:"photo"`
-	Document  Document    `json:"document"`
+	ID       int         `json:"message_id"`
+	From     User        `json:"from"`
+	Date     int         `json:"date"`
+	Chat     Chat        `json:"chat"`
+	Text     string      `json:"text"`
+	Photo    []PhotoSize `json:"photo"`
+	Document Document    `json:"document"`
 }
 
 type User struct {
@@ -53,4 +53,11 @@ type Document struct {
 	FileName string    `json:"file_name"`
 	MimeType string    `json:"mime_type"`
 	FileSize int       `json:"file_size"`
+}
+
+type ReplyKeyboardMarkup struct {
+	Keyboard  [][]string `json:"keyboard"`
+	Resize    bool       `json:"resize_keyboard"`
+	OneTime   bool       `json:"one_time_keyboard"`
+	Selective bool       `json:"selective"`
 }

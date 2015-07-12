@@ -47,7 +47,7 @@ func (cmd *cmdAno) Match(text string) bool {
 	return cmd.re.MatchString(text)
 }
 
-func (cmd *cmdAno) Run(chatID int, text string) error {
+func (cmd *cmdAno) Run(chatID, replyID int, text string) error {
 	var (
 		filename string
 		data     []byte
@@ -188,6 +188,6 @@ func (cmd *cmdAno) searchTag(tags []string) (filename string, data []byte, err e
 	if err != nil {
 		return "", nil, err
 	}
-	
+
 	return rndData.ID, imgData, nil
 }

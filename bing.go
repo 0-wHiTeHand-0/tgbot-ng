@@ -6,14 +6,15 @@ package main
 
 import (
 	"errors"
+	"io/ioutil"
 	"math/rand"
+	"net/http"
 	"path"
 	"regexp"
-	"net/http"
-	"io/ioutil"
+	"strings"
 
-	"github.com/jroimartin/tgbot-ng/tg"
 	"github.com/jroimartin/tgbot-ng/bing"
+	"github.com/jroimartin/tgbot-ng/tg"
 )
 
 type cmdBing struct {
@@ -43,7 +44,7 @@ func (cmd *cmdBing) Match(text string) bool {
 	return cmd.re.MatchString(text)
 }
 
-func (cmd *cmdBing) Run(chatID int, text string) error {
+func (cmd *cmdBing) Run(chatID, replyID int, text string) error {
 	var (
 		filename string
 		data     []byte
@@ -54,19 +55,32 @@ func (cmd *cmdBing) Run(chatID int, text string) error {
 	m := cmd.re.FindStringSubmatch(text)
 	if len(m) == 2 {
 		query = m[1]
+		query = strings.Replace(query, " ", "+", -1)
 	}
 
-	filename, data, err = cmd.search(query)
-	if err != nil {
-		return err
-	}
-
-	if path.Ext(filename) == ".gif" {
-		_, err = cmd.cli.SendDocument(chatID, filename, data)
+	if query == "" {
+		keyboard := [][]string{
+			[]string{"/bing underboobs", "/bing sideboobs"},
+		}
+		if _, err := cmd.cli.SendMessageKeyboard(chatID, replyID, "Choose your destiny", keyboard); err != nil {
+			return err
+		}
 	} else {
-		_, err = cmd.cli.SendPhoto(chatID, filename, data)
+		filename, data, err = cmd.search(query)
+		if err != nil {
+			return err
+		}
+		if path.Ext(filename) == ".gif" {
+			_, err = cmd.cli.SendDocument(chatID, filename, data)
+		} else {
+			_, err = cmd.cli.SendPhoto(chatID, filename, data)
+		}
+		if err != nil {
+			return err
+		}
 	}
-	return err
+
+	return nil
 }
 
 func (cmd *cmdBing) search(query string) (filename string, data []byte, err error) {

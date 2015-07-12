@@ -77,6 +77,43 @@ func (c *Client) SendMessage(chatID int, text string) (Response, error) {
 	return r, nil
 }
 
+func (c *Client) SendMessageKeyboard(chatID, replyID int, text string, keyboard [][]string) (Response, error) {
+	kbdData := ReplyKeyboardMarkup{
+		Keyboard:  keyboard,
+		Resize:    true,
+		OneTime:   true,
+		Selective: true,
+	}
+	kbdBuf, err := json.Marshal(kbdData)
+	if err != nil {
+		return Response{}, err
+	}
+	resp, err := http.PostForm(baseURL+c.Token+"/sendMessage",
+		url.Values{
+			"chat_id":             {strconv.Itoa(chatID)},
+			"reply_to_message_id": {strconv.Itoa(replyID)},
+			"text":                {text},
+			"reply_markup":        {string(kbdBuf)}})
+	if err != nil {
+		return Response{}, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return Response{}, err
+	}
+	var r Response
+	if err := json.Unmarshal(body, &r); err != nil {
+		return Response{}, err
+	}
+	if !r.Ok {
+		return Response{}, errors.New("response is not OK")
+	}
+
+	return r, nil
+}
+
 func (c *Client) SendPhoto(chatID int, filename string, data []byte) (Response, error) {
 	params := map[string]string{"chat_id": strconv.Itoa(chatID)}
 	return c.uploadFile("sendPhoto", "photo", filename, data, params)
