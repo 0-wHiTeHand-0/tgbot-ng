@@ -7,6 +7,11 @@
 		"ano": {
 			"enabled": true,
 			"search_limit": 10
+		},
+		"bing": {
+			"enabled": true,
+			"api_key": "API_KEY",
+			"search_limit": 10
 		}
 	}
 }

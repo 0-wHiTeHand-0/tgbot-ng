@@ -2,14 +2,14 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package main
+package utils
 
 import (
 	"io/ioutil"
 	"net/http"
 )
 
-func download(url string) (data []byte, err error) {
+func Download(url string) (data []byte, err error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
