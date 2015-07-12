@@ -23,7 +23,7 @@ complete example can be found at doc/config.json.
 	"update_interval": 1,
 	"allowed_ids": [],
 	"commands": {
-		"ano": {
+		"ano": {
 			"enabled": true,
 			"search_limit": 10
 		},
