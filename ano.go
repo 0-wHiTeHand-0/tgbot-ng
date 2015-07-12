@@ -68,7 +68,7 @@ func (cmd *cmdAno) Run(chatID, replyID int, text string) error {
 		return err
 	}
 
-	if _, err := cmd.cli.SendMessage(chatID, "What has been seen cannot be unseen...\n"); err != nil {
+	if _, err := cmd.cli.SendText(chatID, 0, "What has been seen cannot be unseen...\n"); err != nil {
 		return err
 	}
 

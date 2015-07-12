@@ -57,10 +57,15 @@ func (cmd *cmdBing) Run(chatID, replyID int, text string) error {
 	}
 
 	if query == "" {
-		keyboard := [][]string{
-			[]string{"/bing underboobs", "/bing sideboobs"},
+		keyboard := tg.ReplyKeyboardMarkup{
+			Keyboard:  [][]string{
+				[]string{"/bing underboobs", "/bing sideboobs"},
+			},
+			Resize:    true,
+			OneTime:   true,
+			Selective: true,
 		}
-		if _, err := cmd.cli.SendMessageKeyboard(chatID, replyID, "Choose your destiny", keyboard); err != nil {
+		if _, err := cmd.cli.SendKeyboard(chatID, replyID, "Choose your destiny", keyboard); err != nil {
 			return err
 		}
 	} else {

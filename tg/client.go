@@ -54,9 +54,12 @@ func (c *Client) GetUpdates() (UpdateResponse, error) {
 	return ur, nil
 }
 
-func (c *Client) SendMessage(chatID int, text string) (Response, error) {
+func (c *Client) SendText(chatID, replyID int, text string) (Response, error) {
 	resp, err := http.PostForm(baseURL+c.Token+"/sendMessage",
-		url.Values{"chat_id": {strconv.Itoa(chatID)}, "text": {text}})
+		url.Values{
+			"chat_id": {strconv.Itoa(chatID)}, 
+			"reply_to_message_id": {strconv.Itoa(replyID)},
+			"text": {text}})
 	if err != nil {
 		return Response{}, err
 	}
@@ -77,14 +80,8 @@ func (c *Client) SendMessage(chatID int, text string) (Response, error) {
 	return r, nil
 }
 
-func (c *Client) SendMessageKeyboard(chatID, replyID int, text string, keyboard [][]string) (Response, error) {
-	kbdData := ReplyKeyboardMarkup{
-		Keyboard:  keyboard,
-		Resize:    true,
-		OneTime:   true,
-		Selective: true,
-	}
-	kbdBuf, err := json.Marshal(kbdData)
+func (c *Client) SendKeyboard(chatID, replyID int, text string, keyboard ReplyKeyboardMarkup) (Response, error) {
+	kbdBuf, err := json.Marshal(keyboard)
 	if err != nil {
 		return Response{}, err
 	}
