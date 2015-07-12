@@ -9,10 +9,11 @@ import (
 	"math/rand"
 	"path"
 	"regexp"
+	"net/http"
+	"io/ioutil"
 
 	"github.com/jroimartin/tgbot-ng/tg"
-	"github.com/jroimartin/tgbot-ng/utils"
-	"github.com/jroimartin/tgbot-ng/utils/bing"
+	"github.com/jroimartin/tgbot-ng/bing"
 )
 
 type cmdBing struct {
@@ -83,9 +84,15 @@ func (cmd *cmdBing) search(query string) (filename string, data []byte, err erro
 	}
 	rndInt := rand.Intn(len(results))
 
-	imgData, err := utils.Download(results[rndInt].MediaUrl)
+	resp, err := http.Get(results[rndInt].MediaUrl)
 	if err != nil {
 		return "", nil, err
 	}
+	defer resp.Body.Close()
+	imgData, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", nil, err
+	}
+
 	return results[rndInt].MediaUrl, imgData, nil
 }

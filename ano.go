@@ -17,7 +17,6 @@ import (
 	"strings"
 
 	"github.com/jroimartin/tgbot-ng/tg"
-	"github.com/jroimartin/tgbot-ng/utils"
 )
 
 const picsURL = "http://ano.lolcathost.org/pics/"
@@ -119,10 +118,16 @@ func (cmd *cmdAno) randomPic() (filename string, data []byte, err error) {
 		return "", nil, err
 	}
 
-	imgData, err := utils.Download(picsURL + respData.Pic.ID)
+	resp, err = http.Get(picsURL + respData.Pic.ID)
 	if err != nil {
 		return "", nil, err
 	}
+	defer resp.Body.Close()
+	imgData, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", nil, err
+	}
+
 	return respData.Pic.ID, imgData, nil
 }
 
@@ -174,9 +179,15 @@ func (cmd *cmdAno) searchTag(tags []string) (filename string, data []byte, err e
 	rndInt := rand.Intn(len(respData.Pics) - 1)
 	rndData := respData.Pics[rndInt]
 
-	imgData, err := utils.Download(picsURL + rndData.ID)
+	resp, err = http.Get(picsURL + rndData.ID)
 	if err != nil {
 		return "", nil, err
 	}
+	defer resp.Body.Close()
+	imgData, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", nil, err
+	}
+	
 	return rndData.ID, imgData, nil
 }
