@@ -6,10 +6,15 @@ package main
 
 import (
 	"log"
+	"math/rand"
 	"time"
 
 	"github.com/jroimartin/tgbot-ng/tg"
 )
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
 
 type bot struct {
 	cli            *tg.Client
