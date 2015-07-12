@@ -58,6 +58,7 @@ func (b *bot) handleUpdate(u tg.Update) {
 	log.Printf("update: %+v\n", u)
 	if !b.isAllowed(u) {
 		log.Println("error: not allowed")
+		return
 	}
 	for _, cmd := range b.commands {
 		if cmd.Match(u.Message.Text) {

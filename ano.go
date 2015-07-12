@@ -37,7 +37,7 @@ func NewCmdAno(config CmdConfigAno, cli *tg.Client) Command {
 		config.SearchLimit = 10
 	}
 	return &cmdAno{
-		re:     regexp.MustCompile(`^/ano($| .+$)`),
+		re:     regexp.MustCompile(`^/ano(?:@[^ ]+?)?(?:$| +(.+)$)`),
 		config: config,
 		cli:    cli,
 	}
@@ -52,9 +52,13 @@ func (cmd *cmdAno) Run(chatID int, text string) error {
 		filename string
 		data     []byte
 		err      error
+		tags     string
 	)
 
-	tags := strings.TrimSpace(strings.TrimPrefix(text, "/ano"))
+	m := cmd.re.FindStringSubmatch(text)
+	if len(m) == 2 {
+		tags = m[1]
+	}
 	if tags == "" {
 		filename, data, err = cmd.randomPic()
 	} else {

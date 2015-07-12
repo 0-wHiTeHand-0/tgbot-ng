@@ -10,7 +10,7 @@ type UpdateResponse struct {
 }
 
 type Response struct {
-	Ok      bool     `json:"ok"`
+	Ok      bool    `json:"ok"`
 	Message Message `json:"result"`
 }
 
@@ -20,13 +20,13 @@ type Update struct {
 }
 
 type Message struct {
-	MessageID int    `json:"message_id"`
-	From      User   `json:"from"`
-	Date      int    `json:"date"`
-	Chat      Chat   `json:"chat"`
-	Text      string `json:"text"`
-	Photo []PhotoSize `json:"photo"`
-	Document Document `json:"document"`
+	MessageID int         `json:"message_id"`
+	From      User        `json:"from"`
+	Date      int         `json:"date"`
+	Chat      Chat        `json:"chat"`
+	Text      string      `json:"text"`
+	Photo     []PhotoSize `json:"photo"`
+	Document  Document    `json:"document"`
 }
 
 type User struct {
@@ -41,17 +41,16 @@ type Chat struct {
 }
 
 type PhotoSize struct {
-	FileID	string `json:"file_id"`
-	Width	int `json:"width"`
-	Height	int `json:"height"`
-	FileSize	int `json:"file_size"`
+	FileID   string `json:"file_id"`
+	Width    int    `json:"width"`
+	Height   int    `json:"height"`
+	FileSize int    `json:"file_size"`
 }
 
 type Document struct {
-	FileID	string `json:"file_id"`
-	Thumb	PhotoSize `json:"thumb"`
-	FileName	string `json:"file_name"`
-	MimeType	string `json:"mime_type"`
-	FileSize	int `json:"file_size"`
-
+	FileID   string    `json:"file_id"`
+	Thumb    PhotoSize `json:"thumb"`
+	FileName string    `json:"file_name"`
+	MimeType string    `json:"mime_type"`
+	FileSize int       `json:"file_size"`
 }

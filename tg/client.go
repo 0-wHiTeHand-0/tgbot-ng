@@ -121,7 +121,7 @@ func (c *Client) uploadFile(endpoint, fieldname, filename string, data []byte, p
 	if err != nil {
 		return Response{}, err
 	}
-	
+
 	var r Response
 	if err := json.Unmarshal(body, &r); err != nil {
 		return Response{}, err
