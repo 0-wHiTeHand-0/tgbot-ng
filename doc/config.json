@@ -2,5 +2,10 @@
 	"name": "bot_name",
 	"token": "api_token",
 	"update_interval": 1,
-	"allowed_ids": []
+	"allowed_ids": [],
+	"commands": {
+		"ano": {
+			"enabled": true
+		}
+	}
 }

@@ -11,10 +11,15 @@ import (
 )
 
 type config struct {
-	Name           string `json:"name"`
-	Token          string `json:"token"`
-	UpdateInterval int    `json:"update_interval"`
-	AllowedIDs     []int  `json:"allowed_ids"`
+	Name           string     `json:"name"`
+	Token          string     `json:"token"`
+	UpdateInterval int        `json:"update_interval"`
+	AllowedIDs     []int      `json:"allowed_ids"`
+	Commands       cmdConfigs `json:"commands"`
+}
+
+type cmdConfigs struct {
+	Ano CmdConfigAno `json:"ano"`
 }
 
 func parseConfig(file string) (config, error) {

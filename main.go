@@ -29,5 +29,11 @@ func main() {
 	if cfg.UpdateInterval > 0 {
 		tgbot.setUpdateInterval(cfg.UpdateInterval)
 	}
+
+	// Add enabled commands
+	if cfg.Commands.Ano.Enabled {
+		tgbot.addCommand(NewCmdAno(cfg.Commands.Ano, tgbot.cli))
+	}
+
 	tgbot.loop()
 }

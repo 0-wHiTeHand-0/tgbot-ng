@@ -5,7 +5,6 @@
 package main
 
 import (
-	"errors"
 	"log"
 	"time"
 
@@ -16,6 +15,7 @@ type bot struct {
 	cli            *tg.Client
 	allowedIDs     []int
 	updateInterval time.Duration
+	commands       []Command
 }
 
 func newBot(name, token string) *bot {
@@ -37,6 +37,10 @@ func (b *bot) setUpdateInterval(nseg int) {
 	b.updateInterval = time.Duration(nseg) * time.Second
 }
 
+func (b *bot) addCommand(cmd Command) {
+	b.commands = append(b.commands, cmd)
+}
+
 func (b *bot) loop() {
 	for {
 		update, err := b.cli.GetUpdates()
@@ -44,21 +48,25 @@ func (b *bot) loop() {
 			log.Println("error:", err)
 		}
 		for _, r := range update.Results {
-			if err := b.handleResult(r); err != nil {
-				log.Println("error:", err)
-			}
+			go b.handleResult(r)
 		}
 		time.Sleep(b.updateInterval)
 	}
 }
 
-func (b *bot) handleResult(r tg.Result) error {
+func (b *bot) handleResult(r tg.Result) {
 	log.Printf("result: %+v\n", r)
 	if !b.isAllowed(r) {
-		return errors.New("not allowed")
+		log.Println("error: not allowed")
 	}
-	// TODO
-	return nil
+	for _, cmd := range b.commands {
+		if cmd.Match(r.Message.Text) {
+			if err := cmd.Run(r.Message.Chat.ID, r.Message.Text); err != nil {
+				log.Printf("error: %v\n", err)
+			}
+			break
+		}
+	}
 }
 
 func (b *bot) isAllowed(r tg.Result) bool {
