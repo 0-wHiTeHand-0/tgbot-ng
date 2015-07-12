@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
 // response represents the set of results returned by Bing.
@@ -87,7 +88,7 @@ func (k Kind) String() string {
 // Query sends a new query to Bing and returns the results.
 func (c Client) Query(k Kind, q string) ([]Result, error) {
 	uri := "https://api.datamarket.azure.com/Bing/Search/v1/" +
-		k.String() + "?Query='" + q + "'&Adult='Off'&$format=json"
+		k.String() + "?Query='" + url.QueryEscape(q) + "'&Adult='Off'&$format=json"
 
 	results := []Result{}
 	for i := 0; i < c.Limit; i++ {

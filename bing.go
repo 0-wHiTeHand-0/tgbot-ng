@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"path"
 	"regexp"
-	"strings"
 
 	"github.com/jroimartin/tgbot-ng/bing"
 	"github.com/jroimartin/tgbot-ng/tg"
@@ -55,7 +54,6 @@ func (cmd *cmdBing) Run(chatID, replyID int, text string) error {
 	m := cmd.re.FindStringSubmatch(text)
 	if len(m) == 2 {
 		query = m[1]
-		query = strings.Replace(query, " ", "+", -1)
 	}
 
 	if query == "" {
