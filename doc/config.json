@@ -11,7 +11,7 @@
 		"bing": {
 			"enabled": true,
 			"api_key": "API_KEY",
-			"search_limit": 10
+			"search_limit": 1
 		}
 	}
 }

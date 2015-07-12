@@ -71,6 +71,9 @@ func (b *bot) handleUpdate(u tg.Update) {
 }
 
 func (b *bot) isAllowed(u tg.Update) bool {
+	if len(b.allowedIDs) == 0 {
+		return true
+	}
 	for _, aid := range b.allowedIDs {
 		if u.Message.Chat.ID == aid {
 			return true
