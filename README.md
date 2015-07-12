@@ -16,6 +16,7 @@ usage: tgbot-ng config
 The following snippet shows a typical config file. A
 complete example can be found at doc/config.json.
 
+```json
 {
 	"name": "bot_name",
 	"token": "api_token",
