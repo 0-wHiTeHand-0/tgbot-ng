@@ -43,25 +43,25 @@ func (b *bot) addCommand(cmd Command) {
 
 func (b *bot) loop() {
 	for {
-		update, err := b.cli.GetUpdates()
+		ur, err := b.cli.GetUpdates()
 		if err != nil {
 			log.Println("error:", err)
 		}
-		for _, r := range update.Results {
-			go b.handleResult(r)
+		for _, u := range ur.Updates {
+			go b.handleUpdate(u)
 		}
 		time.Sleep(b.updateInterval)
 	}
 }
 
-func (b *bot) handleResult(r tg.Result) {
-	log.Printf("result: %+v\n", r)
-	if !b.isAllowed(r) {
+func (b *bot) handleUpdate(u tg.Update) {
+	log.Printf("update: %+v\n", u)
+	if !b.isAllowed(u) {
 		log.Println("error: not allowed")
 	}
 	for _, cmd := range b.commands {
-		if cmd.Match(r.Message.Text) {
-			if err := cmd.Run(r.Message.Chat.ID, r.Message.Text); err != nil {
+		if cmd.Match(u.Message.Text) {
+			if err := cmd.Run(u.Message.Chat.ID, u.Message.Text); err != nil {
 				log.Printf("error: %v\n", err)
 			}
 			break
@@ -69,9 +69,9 @@ func (b *bot) handleResult(r tg.Result) {
 	}
 }
 
-func (b *bot) isAllowed(r tg.Result) bool {
+func (b *bot) isAllowed(u tg.Update) bool {
 	for _, aid := range b.allowedIDs {
-		if r.Message.Chat.ID == aid {
+		if u.Message.Chat.ID == aid {
 			return true
 		}
 	}

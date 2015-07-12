@@ -64,14 +64,14 @@ func (cmd *cmdAno) Run(chatID int, text string) error {
 		return err
 	}
 
-	if err := cmd.cli.SendMessage(chatID, "What has been seen cannot be unseen...\n"); err != nil {
+	if _, err := cmd.cli.SendMessage(chatID, "What has been seen cannot be unseen...\n"); err != nil {
 		return err
 	}
 
 	if path.Ext(filename) == ".gif" {
-		err = cmd.cli.SendDocument(chatID, filename, data)
+		_, err = cmd.cli.SendDocument(chatID, filename, data)
 	} else {
-		err = cmd.cli.SendPhoto(chatID, filename, data)
+		_, err = cmd.cli.SendPhoto(chatID, filename, data)
 	}
 	return err
 }
@@ -94,7 +94,8 @@ func (cmd *cmdAno) randomPic() (filename string, data []byte, err error) {
 		return "", nil, err
 	}
 
-	resp, err := http.Post("http://ano.lolcathost.org/json/pic.json", "application/json", bytes.NewReader(reqBody))
+	resp, err := http.Post("http://ano.lolcathost.org/json/pic.json",
+		"application/json", bytes.NewReader(reqBody))
 	if err != nil {
 		return "", nil, err
 	}
@@ -142,7 +143,8 @@ func (cmd *cmdAno) searchTag(tags []string) (filename string, data []byte, err e
 		return "", nil, err
 	}
 
-	resp, err := http.Post("http://ano.lolcathost.org/json/tag.json", "application/json", bytes.NewReader(reqBody))
+	resp, err := http.Post("http://ano.lolcathost.org/json/tag.json",
+		"application/json", bytes.NewReader(reqBody))
 	if err != nil {
 		return "", nil, err
 	}

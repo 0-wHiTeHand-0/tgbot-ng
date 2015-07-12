@@ -4,12 +4,17 @@
 
 package tg
 
-type Update struct {
+type UpdateResponse struct {
 	Ok      bool     `json:"ok"`
-	Results []Result `json:"result"`
+	Updates []Update `json:"result"`
 }
 
-type Result struct {
+type Response struct {
+	Ok      bool     `json:"ok"`
+	Message Message `json:"result"`
+}
+
+type Update struct {
 	UpdateID int     `json:"update_id"`
 	Message  Message `json:"message"`
 }
@@ -20,6 +25,8 @@ type Message struct {
 	Date      int    `json:"date"`
 	Chat      Chat   `json:"chat"`
 	Text      string `json:"text"`
+	Photo []PhotoSize `json:"photo"`
+	Document Document `json:"document"`
 }
 
 type User struct {
@@ -31,4 +38,20 @@ type User struct {
 
 type Chat struct {
 	ID int
+}
+
+type PhotoSize struct {
+	FileID	string `json:"file_id"`
+	Width	int `json:"width"`
+	Height	int `json:"height"`
+	FileSize	int `json:"file_size"`
+}
+
+type Document struct {
+	FileID	string `json:"file_id"`
+	Thumb	PhotoSize `json:"thumb"`
+	FileName	string `json:"file_name"`
+	MimeType	string `json:"mime_type"`
+	FileSize	int `json:"file_size"`
+
 }
