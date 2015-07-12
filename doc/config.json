@@ -5,7 +5,8 @@
 	"allowed_ids": [],
 	"commands": {
 		"ano": {
-			"enabled": true
+			"enabled": true,
+			"search_limit": 10
 		}
 	}
 }
