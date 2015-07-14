@@ -64,19 +64,19 @@ type ReplyKeyboardMarkup struct {
 
 type ReplyKeyboardHide struct {
 	HideKeyboard bool `json:"hide_keyboard"` // Always true
-	Selective bool `json:"selective"`
+	Selective    bool `json:"selective"`
 }
 
 type ForceReply struct {
 	ForceReply bool `json:"force_reply"` // Always true
-	Selective bool `json:"selective"`
+	Selective  bool `json:"selective"`
 }
 
 type SendMessageParams struct {
-	ChatID int `json:"chat_id"`
-	Text string `json:"text"`
-	Preview bool `json:"disable_web_page_preview"`
-	ReplyID int `json:"reply_to_message_id"`
+	ChatID      int         `json:"chat_id"`
+	Text        string      `json:"text"`
+	Preview     bool        `json:"disable_web_page_preview"`
+	ReplyID     int         `json:"reply_to_message_id"`
 	ReplyMarkup interface{} `json:"reply_markup"`
 }
 

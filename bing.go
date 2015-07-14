@@ -53,7 +53,7 @@ func (cmd *cmdBing) Run(chatID, replyID int, text string) error {
 
 	if query == "" {
 		kbd := tg.ReplyKeyboardMarkup{
-			Keyboard:  [][]string{
+			Keyboard: [][]string{
 				[]string{"/bing underboobs", "/bing sideboobs"},
 			},
 			Resize:    true,

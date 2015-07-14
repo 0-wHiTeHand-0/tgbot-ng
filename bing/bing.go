@@ -51,13 +51,13 @@ type Client struct {
 
 // NewClient returns a new Client. The parameter key allows to specify
 // the API key.
-func NewClient(key string) *Client {
-	c := &Client{}
+func NewClient(key string) Client {
 	tr := &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
-	c.client = &http.Client{Transport: tr}
-	c.key = key
-	c.Limit = 1
-	return c
+	return Client{
+		client: &http.Client{Transport: tr},
+		key:    key,
+		Limit:  1,
+	}
 }
 
 // A Kind defines the search type (web, images, video or news).

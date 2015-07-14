@@ -39,47 +39,47 @@ func (c *Client) GetUpdates() (UpdateResponse, error) {
 	if err != nil {
 		return UpdateResponse{}, err
 	}
-	
+
 	var ur UpdateResponse
 	if err := json.Unmarshal(b, &ur); err != nil {
 		return UpdateResponse{}, err
 	}
-	
+
 	if !ur.Ok {
 		return UpdateResponse{}, errors.New("update is not OK")
 	}
-	
+
 	for _, u := range ur.Updates {
 		if u.UpdateID > c.lastUpdateID {
 			c.lastUpdateID = u.UpdateID
 		}
 	}
-	
+
 	return ur, nil
 }
 
 func (c *Client) SendText(chatID int, text string) (Response, error) {
 	params := SendMessageParams{
 		ChatID: chatID,
-		Text: text,
+		Text:   text,
 	}
 	return c.SendMessage(params)
 }
 
 func (c *Client) SendTextReply(chatID, replyID int, text string) (Response, error) {
 	params := SendMessageParams{
-		ChatID: chatID,
+		ChatID:  chatID,
 		ReplyID: replyID,
-		Text: text,
+		Text:    text,
 	}
 	return c.SendMessage(params)
 }
 
 func (c *Client) SendKbd(chatID, replyID int, text string, kbd ReplyKeyboardMarkup) (Response, error) {
 	params := SendMessageParams{
-		ChatID: chatID,
-		ReplyID: replyID,
-		Text: text,
+		ChatID:      chatID,
+		ReplyID:     replyID,
+		Text:        text,
 		ReplyMarkup: kbd,
 	}
 	return c.SendMessage(params)
@@ -99,7 +99,7 @@ func (c *Client) SendMessage(params SendMessageParams) (Response, error) {
 		}
 		v.Add("reply_markup", string(b))
 	}
-	
+
 	resp, err := http.PostForm(baseURL+c.Token+"/sendMessage", v)
 	if err != nil {
 		return Response{}, err
@@ -110,12 +110,12 @@ func (c *Client) SendMessage(params SendMessageParams) (Response, error) {
 	if err != nil {
 		return Response{}, err
 	}
-	
+
 	var r Response
 	if err := json.Unmarshal(body, &r); err != nil {
 		return Response{}, err
 	}
-	
+
 	if !r.Ok {
 		return Response{}, errors.New("response is not OK")
 	}
@@ -172,7 +172,7 @@ func (c *Client) uploadFile(endpoint, fieldname string, file File, params map[st
 	if err := json.Unmarshal(body, &r); err != nil {
 		return Response{}, err
 	}
-	
+
 	if !r.Ok {
 		return Response{}, errors.New("response is not OK")
 	}

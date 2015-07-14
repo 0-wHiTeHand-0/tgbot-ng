@@ -49,9 +49,9 @@ func (cmd *cmdAno) Match(text string) bool {
 
 func (cmd *cmdAno) Run(chatID, replyID int, text string) error {
 	var (
-		img     tg.File
-		err      error
-		tags     string
+		img  tg.File
+		err  error
+		tags string
 	)
 
 	m := cmd.re.FindStringSubmatch(text)
@@ -124,7 +124,7 @@ func (cmd *cmdAno) randomPic() (img tg.File, err error) {
 	defer resp.Body.Close()
 	imgData, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return  tg.File{}, err
+		return tg.File{}, err
 	}
 
 	return tg.File{Name: respData.Pic.ID, Data: imgData}, nil
@@ -169,7 +169,7 @@ func (cmd *cmdAno) searchTag(tags []string) (img tg.File, err error) {
 	}
 	err = json.Unmarshal(respBody, &respData)
 	if err != nil {
-		return  tg.File{}, err
+		return tg.File{}, err
 	}
 	if len(respData.Pics) <= 1 {
 		return tg.File{}, errors.New("no pics")
