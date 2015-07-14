@@ -51,8 +51,8 @@ type Client struct {
 
 // NewClient returns a new Client. The parameter key allows to specify
 // the API key.
-func NewClient(key string) Client {
-	c := Client{}
+func NewClient(key string) *Client {
+	c := &Client{}
 	tr := &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}
 	c.client = &http.Client{Transport: tr}
 	c.key = key
@@ -111,7 +111,7 @@ func (c Client) Query(k Kind, q string) ([]Result, error) {
 			return nil, errors.New("returned status is not OK")
 		}
 
-		br := response{}
+		var br response
 		if err := json.Unmarshal(body, &br); err != nil {
 			return nil, err
 		}

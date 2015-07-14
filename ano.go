@@ -49,8 +49,7 @@ func (cmd *cmdAno) Match(text string) bool {
 
 func (cmd *cmdAno) Run(chatID, replyID int, text string) error {
 	var (
-		filename string
-		data     []byte
+		img     tg.File
 		err      error
 		tags     string
 	)
@@ -60,27 +59,27 @@ func (cmd *cmdAno) Run(chatID, replyID int, text string) error {
 		tags = m[1]
 	}
 	if tags == "" {
-		filename, data, err = cmd.randomPic()
+		img, err = cmd.randomPic()
 	} else {
-		filename, data, err = cmd.searchTag(strings.Split(tags, ","))
+		img, err = cmd.searchTag(strings.Split(tags, ","))
 	}
 	if err != nil {
 		return err
 	}
 
-	if _, err := cmd.cli.SendText(chatID, 0, "What has been seen cannot be unseen...\n"); err != nil {
+	if _, err := cmd.cli.SendText(chatID, "What has been seen cannot be unseen...\n"); err != nil {
 		return err
 	}
 
-	if path.Ext(filename) == ".gif" {
-		_, err = cmd.cli.SendDocument(chatID, filename, data)
+	if path.Ext(img.Name) == ".gif" {
+		_, err = cmd.cli.SendDocument(chatID, img)
 	} else {
-		_, err = cmd.cli.SendPhoto(chatID, filename, data)
+		_, err = cmd.cli.SendPhoto(chatID, img)
 	}
 	return err
 }
 
-func (cmd *cmdAno) randomPic() (filename string, data []byte, err error) {
+func (cmd *cmdAno) randomPic() (img tg.File, err error) {
 	var respData struct {
 		Pic struct {
 			ID string
@@ -95,43 +94,43 @@ func (cmd *cmdAno) randomPic() (filename string, data []byte, err error) {
 
 	reqBody, err := json.Marshal(reqData)
 	if err != nil {
-		return "", nil, err
+		return tg.File{}, err
 	}
 
 	resp, err := http.Post("http://ano.lolcathost.org/json/pic.json",
 		"application/json", bytes.NewReader(reqBody))
 	if err != nil {
-		return "", nil, err
+		return tg.File{}, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return "", nil, fmt.Errorf("HTTP error: %v (%v)", resp.Status, resp.StatusCode)
+		return tg.File{}, fmt.Errorf("HTTP error: %v (%v)", resp.Status, resp.StatusCode)
 	}
 
 	repBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", nil, err
+		return tg.File{}, err
 	}
 	err = json.Unmarshal(repBody, &respData)
 	if err != nil {
-		return "", nil, err
+		return tg.File{}, err
 	}
 
 	resp, err = http.Get(picsURL + respData.Pic.ID)
 	if err != nil {
-		return "", nil, err
+		return tg.File{}, err
 	}
 	defer resp.Body.Close()
 	imgData, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", nil, err
+		return  tg.File{}, err
 	}
 
-	return respData.Pic.ID, imgData, nil
+	return tg.File{Name: respData.Pic.ID, Data: imgData}, nil
 }
 
-func (cmd *cmdAno) searchTag(tags []string) (filename string, data []byte, err error) {
+func (cmd *cmdAno) searchTag(tags []string) (img tg.File, err error) {
 	var respData struct {
 		Pics []struct {
 			ID string
@@ -150,30 +149,30 @@ func (cmd *cmdAno) searchTag(tags []string) (filename string, data []byte, err e
 
 	reqBody, err := json.Marshal(reqData)
 	if err != nil {
-		return "", nil, err
+		return tg.File{}, err
 	}
 
 	resp, err := http.Post("http://ano.lolcathost.org/json/tag.json",
 		"application/json", bytes.NewReader(reqBody))
 	if err != nil {
-		return "", nil, err
+		return tg.File{}, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return "", nil, fmt.Errorf("HTTP error: %v (%v)", resp.Status, resp.StatusCode)
+		return tg.File{}, fmt.Errorf("HTTP error: %v (%v)", resp.Status, resp.StatusCode)
 	}
 
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", nil, err
+		return tg.File{}, err
 	}
 	err = json.Unmarshal(respBody, &respData)
 	if err != nil {
-		return "", nil, err
+		return  tg.File{}, err
 	}
 	if len(respData.Pics) <= 1 {
-		return "", nil, errors.New("no pics")
+		return tg.File{}, errors.New("no pics")
 	}
 
 	rndInt := rand.Intn(len(respData.Pics) - 1)
@@ -181,13 +180,13 @@ func (cmd *cmdAno) searchTag(tags []string) (filename string, data []byte, err e
 
 	resp, err = http.Get(picsURL + rndData.ID)
 	if err != nil {
-		return "", nil, err
+		return tg.File{}, err
 	}
 	defer resp.Body.Close()
 	imgData, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", nil, err
+		return tg.File{}, err
 	}
 
-	return rndData.ID, imgData, nil
+	return tg.File{Name: rndData.ID, Data: imgData}, nil
 }

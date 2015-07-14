@@ -69,13 +69,13 @@ func (b *bot) handleUpdate(u tg.Update) {
 		if cmd.Match(u.Message.Text) {
 			if err := cmd.Run(u.Message.Chat.ID, u.Message.ID, u.Message.Text); err != nil {
 				log.Printf("error: %v\n", err)
-				b.cli.SendText(u.Message.Chat.ID, 0, "command error")
+				b.cli.SendText(u.Message.Chat.ID, "command error")
 			}
 			return
 		}
 	}
 	log.Printf("error: command not found (%+q)\n", u.Message.Text)
-	b.cli.SendText(u.Message.Chat.ID, 0, "command not found")
+	b.cli.SendText(u.Message.Chat.ID, "command not found")
 }
 
 func (b *bot) isAllowed(u tg.Update) bool {

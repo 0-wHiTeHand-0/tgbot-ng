@@ -44,12 +44,7 @@ func (cmd *cmdBing) Match(text string) bool {
 }
 
 func (cmd *cmdBing) Run(chatID, replyID int, text string) error {
-	var (
-		filename string
-		data     []byte
-		err      error
-		query    string
-	)
+	var query string
 
 	m := cmd.re.FindStringSubmatch(text)
 	if len(m) == 2 {
@@ -57,7 +52,7 @@ func (cmd *cmdBing) Run(chatID, replyID int, text string) error {
 	}
 
 	if query == "" {
-		keyboard := tg.ReplyKeyboardMarkup{
+		kbd := tg.ReplyKeyboardMarkup{
 			Keyboard:  [][]string{
 				[]string{"/bing underboobs", "/bing sideboobs"},
 			},
@@ -65,18 +60,18 @@ func (cmd *cmdBing) Run(chatID, replyID int, text string) error {
 			OneTime:   true,
 			Selective: true,
 		}
-		if _, err := cmd.cli.SendKeyboard(chatID, replyID, "Choose your destiny", keyboard); err != nil {
+		if _, err := cmd.cli.SendKbd(chatID, replyID, "Choose your destiny", kbd); err != nil {
 			return err
 		}
 	} else {
-		filename, data, err = cmd.search(query)
+		img, err := cmd.search(query)
 		if err != nil {
 			return err
 		}
-		if path.Ext(filename) == ".gif" {
-			_, err = cmd.cli.SendDocument(chatID, filename, data)
+		if path.Ext(img.Name) == ".gif" {
+			_, err = cmd.cli.SendDocument(chatID, img)
 		} else {
-			_, err = cmd.cli.SendPhoto(chatID, filename, data)
+			_, err = cmd.cli.SendPhoto(chatID, img)
 		}
 		if err != nil {
 			return err
@@ -86,7 +81,7 @@ func (cmd *cmdBing) Run(chatID, replyID int, text string) error {
 	return nil
 }
 
-func (cmd *cmdBing) search(query string) (filename string, data []byte, err error) {
+func (cmd *cmdBing) search(query string) (img tg.File, err error) {
 	c := bing.NewClient(cmd.config.ApiKey)
 	if cmd.config.SearchLimit > 0 {
 		c.Limit = cmd.config.SearchLimit
@@ -94,22 +89,22 @@ func (cmd *cmdBing) search(query string) (filename string, data []byte, err erro
 
 	results, err := c.Query(bing.Image, query)
 	if err != nil {
-		return "", nil, err
+		return tg.File{}, err
 	}
 	if len(results) == 0 {
-		return "", nil, errors.New("no pics")
+		return tg.File{}, errors.New("no pics")
 	}
 	rndInt := rand.Intn(len(results))
 
 	resp, err := http.Get(results[rndInt].MediaUrl)
 	if err != nil {
-		return "", nil, err
+		return tg.File{}, err
 	}
 	defer resp.Body.Close()
 	imgData, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", nil, err
+		return tg.File{}, err
 	}
 
-	return results[rndInt].MediaUrl, imgData, nil
+	return tg.File{Name: results[rndInt].MediaUrl, Data: imgData}, nil
 }

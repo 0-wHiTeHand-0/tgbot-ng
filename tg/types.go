@@ -61,3 +61,26 @@ type ReplyKeyboardMarkup struct {
 	OneTime   bool       `json:"one_time_keyboard"`
 	Selective bool       `json:"selective"`
 }
+
+type ReplyKeyboardHide struct {
+	HideKeyboard bool `json:"hide_keyboard"` // Always true
+	Selective bool `json:"selective"`
+}
+
+type ForceReply struct {
+	ForceReply bool `json:"force_reply"` // Always true
+	Selective bool `json:"selective"`
+}
+
+type SendMessageParams struct {
+	ChatID int `json:"chat_id"`
+	Text string `json:"text"`
+	Preview bool `json:"disable_web_page_preview"`
+	ReplyID int `json:"reply_to_message_id"`
+	ReplyMarkup interface{} `json:"reply_markup"`
+}
+
+type File struct {
+	Name string
+	Data []byte
+}
