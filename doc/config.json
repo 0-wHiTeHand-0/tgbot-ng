@@ -1,6 +1,6 @@
 {
 	"name": "bot_name",
-	"token": "api_token",
+	"token": "00000000000000000000",
 	"update_interval": 1,
 	"allowed_ids": [],
 	"commands": {
@@ -9,9 +9,25 @@
 			"search_limit": 10
 		},
 		"bing": {
-			"enabled": true,
-			"api_key": "API_KEY",
+			"enabled": false,
+			"api_key": "0000000000000000000",
 			"search_limit": 1
-		}
+		},
+		"breakfast": {
+                        "enabled": false,
+                        "allowed": [-0, 0]
+                },
+		"fcdg": {
+                        "enabled": false,
+                        "path": "fcdg_img_path"
+                },
+		"quotes": {
+                        "enabled": false,
+			"allowed": [-0, 0],
+                        "path": "quotes.txt"
+                },
+		"voice": {
+                        "enabled": false
+                }
 	}
 }

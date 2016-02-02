@@ -27,6 +27,7 @@ type Message struct {
 	Text     string      `json:"text"`
 	Photo    []PhotoSize `json:"photo"`
 	Document Document    `json:"document"`
+	Voice    Voice       `json:"voice"`
 }
 
 type User struct {
@@ -53,6 +54,13 @@ type Document struct {
 	FileName string    `json:"file_name"`
 	MimeType string    `json:"mime_type"`
 	FileSize int       `json:"file_size"`
+}
+
+type Voice struct {
+	FileID   string `json:"file_id"`
+	Duration int    `json:"duration"`
+	MimeType string `json:"mime_type"`
+	FileSize int    `json:"file_size"`
 }
 
 type ReplyKeyboardMarkup struct {

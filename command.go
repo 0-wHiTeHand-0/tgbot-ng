@@ -6,5 +6,5 @@ package main
 
 type Command interface {
 	Match(text string) bool
-	Run(chatID, replyID int, text string) error
+	Run(chatID, replyID int, text string, form string) error
 }

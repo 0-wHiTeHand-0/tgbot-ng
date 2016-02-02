@@ -31,7 +31,6 @@ func main() {
 	if cfg.UpdateInterval > 0 {
 		tgbot.setUpdateInterval(cfg.UpdateInterval)
 	}
-
 	// Add enabled commands
 	if cfg.Commands.Ano.Enabled {
 		tgbot.addCommand(NewCmdAno(cfg.Commands.Ano, tgbot.cli))
@@ -40,6 +39,18 @@ func main() {
 		tgbot.addCommand(NewCmdBing(cfg.Commands.Bing, tgbot.cli))
 	}
 
+	if cfg.Commands.breakfast.Enabled {
+		tgbot.addCommand(NewCmdBreak(cfg.Commands.breakfast, tgbot.cli))
+	}
+	if cfg.Commands.fcdg.Enabled {
+		tgbot.addCommand(NewCmd4cdg(cfg.Commands.fcdg, tgbot.cli))
+	}
+	if cfg.Commands.quote.Enabled {
+		tgbot.addCommand(NewCmdQuote(cfg.Commands.quote, tgbot.cli))
+	}
+	if cfg.Commands.voice.Enabled {
+		tgbot.addCommand(NewCmdVoice(cfg.Commands.voice, tgbot.cli))
+	}
 	tgbot.loop()
 }
 
@@ -52,8 +63,12 @@ type config struct {
 }
 
 type cmdConfigs struct {
-	Ano  CmdConfigAno  `json:"ano"`
-	Bing CmdConfigBing `json:"bing"`
+	Ano       CmdConfigAno   `json:"ano"`
+	Bing      CmdConfigBing  `json:"bing"`
+	fcdg      CmdConfig4cdg  `json:"fcdg"`
+	quote     CmdConfigQuote `json:"quote"`
+	voice     CmdConfigVoice `json:"voice"`
+	breakfast CmdConfigBreak `json:"breakfast"`
 }
 
 func parseConfig(file string) (config, error) {
@@ -71,5 +86,14 @@ func parseConfig(file string) (config, error) {
 	if err := json.Unmarshal(b, &cfg); err != nil {
 		return config{}, err
 	}
+	log.Println(cfg)
+	cfg.Commands.fcdg.Enabled = false
+	cfg.Commands.fcdg.Path = "cards"
+	cfg.Commands.quote.Enabled = true
+	cfg.Commands.quote.Path = "quotes.txt"
+	cfg.Commands.quote.Allowed = []int{-176490, 33439875}
+	cfg.Commands.voice.Enabled = false
+	cfg.Commands.breakfast.Allowed = []int{-176490, 33439875}
+	cfg.Commands.breakfast.Enabled = true
 	return cfg, nil
 }

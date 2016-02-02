@@ -43,7 +43,7 @@ func (cmd *cmdBing) Match(text string) bool {
 	return cmd.re.MatchString(text)
 }
 
-func (cmd *cmdBing) Run(chatID, replyID int, text string) error {
+func (cmd *cmdBing) Run(chatID, replyID int, text string, from string) error {
 	var query string
 
 	m := cmd.re.FindStringSubmatch(text)
@@ -52,18 +52,11 @@ func (cmd *cmdBing) Run(chatID, replyID int, text string) error {
 	}
 
 	if query == "" {
-		kbd := tg.ReplyKeyboardMarkup{
-			Keyboard: [][]string{
-				[]string{"/bing underboobs", "/bing sideboobs"},
-			},
-			Resize:    true,
-			OneTime:   true,
-			Selective: true,
-		}
-		if _, err := cmd.cli.SendKbd(chatID, replyID, "Choose your destiny", kbd); err != nil {
+		cmd.cli.SendText(chatID, "Nope. Try again.")
+	} else {
+		if _, err := cmd.cli.SendText(chatID, "Don't byte off more than you can view."); err != nil {
 			return err
 		}
-	} else {
 		img, err := cmd.search(query)
 		if err != nil {
 			return err

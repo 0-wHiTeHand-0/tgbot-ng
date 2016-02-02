@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"log"
 	"mime/multipart"
 	"net/http"
 	"net/url"
@@ -30,7 +31,7 @@ func NewClient(name, token string) *Client {
 
 func (c *Client) GetUpdates() (UpdateResponse, error) {
 	resp, err := http.PostForm(baseURL+c.Token+"/getUpdates",
-		url.Values{"offset": {strconv.Itoa(c.lastUpdateID + 1)}})
+		url.Values{"offset": {strconv.Itoa(c.lastUpdateID + 1)}, "timeout": {strconv.Itoa(30)}})
 	if err != nil {
 		return UpdateResponse{}, err
 	}
@@ -42,6 +43,7 @@ func (c *Client) GetUpdates() (UpdateResponse, error) {
 
 	var ur UpdateResponse
 	if err := json.Unmarshal(b, &ur); err != nil {
+		log.Println("\n\nParsed response ->\n" + string(b) + "\n\n")
 		return UpdateResponse{}, err
 	}
 
@@ -131,6 +133,11 @@ func (c *Client) SendPhoto(chatID int, photo File) (Response, error) {
 func (c *Client) SendDocument(chatID int, doc File) (Response, error) {
 	params := map[string]string{"chat_id": strconv.Itoa(chatID)}
 	return c.uploadFile("sendDocument", "document", doc, params)
+}
+
+func (c *Client) SendVoice(chatID int, audio File) (Response, error) {
+	params := map[string]string{"chat_id": strconv.Itoa(chatID)}
+	return c.uploadFile("sendVoice", "voice", audio, params)
 }
 
 func (c *Client) uploadFile(endpoint, fieldname string, file File, params map[string]string) (Response, error) {
