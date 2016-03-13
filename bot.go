@@ -5,11 +5,10 @@
 package main
 
 import (
+	"github.com/jroimartin/tgbot-ng/tg"
 	"log"
 	"math/rand"
 	"time"
-
-	"github.com/jroimartin/tgbot-ng/tg"
 )
 
 func init() {
@@ -61,13 +60,22 @@ func (b *bot) loop() {
 
 func (b *bot) handleUpdate(u tg.Update) {
 	log.Printf("update: %+v\n", u)
-	if !b.isAllowed(u) {
+	/*if !b.isAllowed(u) {
 		log.Println("error: not allowed")
 		return
+	}*/
+	if b.cli.BannedIDs_min[u.Message.From.ID] != 0 {
+		tmp := time.Since(b.cli.BannedIDs[u.Message.From.ID])
+		if int64(tmp.Seconds()) < int64(b.cli.BannedIDs_min[u.Message.From.ID]) {
+			log.Println("Warning: user " + u.Message.From.FirstName + " blocked")
+			return
+		} else {
+			b.cli.BannedIDs[u.Message.From.ID] = time.Now()
+		}
 	}
 	for _, cmd := range b.commands {
 		if cmd.Match(u.Message.Text) {
-			if err := cmd.Run(u.Message.Chat.ID, u.Message.ID, u.Message.Text, u.Message.From.FirstName); err != nil {
+			if err := cmd.Run(u.Message.Chat.ID, u.Message.ID, u.Message.Text, u.Message.From.FirstName, u.Message.Reply); err != nil {
 				log.Printf("error: %v\n", err)
 				b.cli.SendText(u.Message.Chat.ID, "command error")
 			}

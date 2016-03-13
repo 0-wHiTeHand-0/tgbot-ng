@@ -51,6 +51,12 @@ func main() {
 	if cfg.Commands.voice.Enabled {
 		tgbot.addCommand(NewCmdVoice(cfg.Commands.voice, tgbot.cli))
 	}
+	if cfg.Commands.chive.Enabled {
+		tgbot.addCommand(NewCmdChive(cfg.Commands.chive, tgbot.cli))
+	}
+	if cfg.Commands.ban.Enabled {
+		tgbot.addCommand(NewCmdBan(cfg.Commands.ban, tgbot.cli))
+	}
 	tgbot.loop()
 }
 
@@ -69,6 +75,8 @@ type cmdConfigs struct {
 	quote     CmdConfigQuote `json:"quote"`
 	voice     CmdConfigVoice `json:"voice"`
 	breakfast CmdConfigBreak `json:"breakfast"`
+	chive     CmdConfigChive `json:"chive"`
+	ban       CmdConfigBan   `json:"ban"`
 }
 
 func parseConfig(file string) (config, error) {
@@ -89,11 +97,14 @@ func parseConfig(file string) (config, error) {
 	log.Println(cfg)
 	cfg.Commands.fcdg.Enabled = false
 	cfg.Commands.fcdg.Path = "cards"
-	cfg.Commands.quote.Enabled = true
+	cfg.Commands.quote.Enabled = false
 	cfg.Commands.quote.Path = "quotes.txt"
-	cfg.Commands.quote.Allowed = []int{-176490, 33439875}
+	cfg.Commands.quote.Allowed = []int{0, 0}
 	cfg.Commands.voice.Enabled = false
-	cfg.Commands.breakfast.Allowed = []int{-176490, 33439875}
-	cfg.Commands.breakfast.Enabled = true
+	cfg.Commands.breakfast.Allowed = []int{0, 0}
+	cfg.Commands.breakfast.Enabled = false
+	cfg.Commands.chive.Enabled = true
+	cfg.Commands.ban.Enabled = true
+	cfg.Commands.ban.Allowed = []int{0}
 	return cfg, nil
 }

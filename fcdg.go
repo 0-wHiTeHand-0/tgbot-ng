@@ -38,7 +38,7 @@ func (cmd *cmd4cdg) Match(text string) bool {
 	return cmd.re.MatchString(text)
 }
 
-func (cmd *cmd4cdg) Run(chatID, replyID int, text string, from string) error {
+func (cmd *cmd4cdg) Run(chatID, replyID int, text string, from string, reply_ID *tg.Message) error {
 	var (
 		err error
 	)

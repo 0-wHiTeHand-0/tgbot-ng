@@ -20,7 +20,7 @@ type CmdConfigBreak struct {
 
 func NewCmdBreak(config CmdConfigBreak, cli *tg.Client) Command {
 	return &cmdBreak{
-		re:     regexp.MustCompile(`^/break(?:$|@[a-zA-Z0-9_]+bot$| .+$)`),
+		re:     regexp.MustCompile(`^/break(?:$|@[a-zA-Z0-9_]+(?i:bot)$| .+$)`),
 		config: config,
 		cli:    cli,
 	}
@@ -30,7 +30,7 @@ func (cmd *cmdBreak) Match(text string) bool {
 	return cmd.re.MatchString(text)
 }
 
-func (cmd *cmdBreak) Run(chatID, replyID int, text string, from string) error {
+func (cmd *cmdBreak) Run(chatID, replyID int, text string, from string, reply_ID *tg.Message) error {
 	//Compruebo que chatID este permitido
 	flag := false
 	for i := 0; i < len(cmd.config.Allowed); i++ {
@@ -48,11 +48,11 @@ func (cmd *cmdBreak) Run(chatID, replyID int, text string, from string) error {
 	m = strings.SplitN(m[0], " ", 2)
 	var message string
 	if len(m) == 1 {
-		message = "<-- Today's breakfast! -->\r\n"
-		for i := range cmd.f_break {
-			message += cmd.f_break[i] + "\r\n"
-		}
 		if len(cmd.f_break) > 0 {
+			message = "<-- Today's breakfast! -->\r\n"
+			for i := range cmd.f_break {
+				message += cmd.f_break[i] + "\r\n"
+			}
 			message = message[:len(message)-2]
 		} else {
 			message = "Nobody wants breakfast for now :("

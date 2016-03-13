@@ -43,7 +43,7 @@ func (cmd *cmdQuote) Match(text string) bool {
 	return cmd.re.MatchString(text)
 }
 
-func (cmd *cmdQuote) Run(chatID, replyID int, text string, from string) error {
+func (cmd *cmdQuote) Run(chatID, replyID int, text string, from string, reply_ID *tg.Message) error {
 	//Compruebo que chatID este permitido
 	flag := false
 	for i := 0; i < len(cmd.config.Allowed); i++ {

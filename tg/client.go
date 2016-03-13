@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 )
 
 const baseURL = "https://api.telegram.org/bot"
@@ -22,11 +23,14 @@ type Client struct {
 	Name  string
 	Token string
 
+	BannedIDs     map[int]time.Time
+	BannedIDs_min map[int]int
+
 	lastUpdateID int
 }
 
 func NewClient(name, token string) *Client {
-	return &Client{Name: name, Token: token}
+	return &Client{Name: name, Token: token, BannedIDs_min: make(map[int]int), BannedIDs: make(map[int]time.Time)}
 }
 
 func (c *Client) GetUpdates() (UpdateResponse, error) {

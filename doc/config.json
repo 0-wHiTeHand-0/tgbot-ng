@@ -28,6 +28,13 @@
                 },
 		"voice": {
                         "enabled": false
-                }
+                },
+		"chive": {
+			"enabled": true
+		},
+		"ban": {
+			"enabled": true,
+			"allowed": [0]
+		}
 	}
 }

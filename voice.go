@@ -1,5 +1,3 @@
-//Needed espeak and opusenc as dependencies
-
 package main
 
 import (
@@ -35,7 +33,7 @@ func (cmd *cmdVoice) Match(text string) bool {
 	return cmd.re.MatchString(text)
 }
 
-func (cmd *cmdVoice) Run(chatID, replyID int, text string, from string) error {
+func (cmd *cmdVoice) Run(chatID, replyID int, text string, from string, reply_ID *tg.Message) error {
 	var (
 		err error
 	)

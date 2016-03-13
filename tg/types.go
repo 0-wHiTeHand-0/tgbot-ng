@@ -28,6 +28,7 @@ type Message struct {
 	Photo    []PhotoSize `json:"photo"`
 	Document Document    `json:"document"`
 	Voice    Voice       `json:"voice"`
+	Reply    *Message    `json:"reply_to_message"`
 }
 
 type User struct {
