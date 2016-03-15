@@ -35,7 +35,7 @@ func NewCmdChive(config CmdConfigChive, cli *tg.Client) Command {
 	return &cmdChive{
 		re:      regexp.MustCompile(`^/chive(?:@[^ ]+?)?(?:$| +(.+)$)`),
 		config:  config,
-		Api_key: "c853fdb0ea07009accc34b822f365482",
+		Api_key: "AKI_KEY",
 		cli:     cli,
 	}
 }
@@ -97,28 +97,8 @@ func (cmd *cmdChive) randomPic() (img tg.File, err error) {
 		}
 	}
 
-	//Coger numero total de posts  de la categoria 60 'Girls'
-	//	resp, err := http.Get("http://api.thechive.com/api/category/60?key="+cmd.Api_key)
-	//	if err != nil {
-	//		return tg.File{}, err
-	//	}
-	//	defer resp.Body.Close()
-	//	if resp.StatusCode != http.StatusOK {
-	//		return tg.File{}, fmt.Errorf("HTTP error: %v (%v)", resp.Status, resp.StatusCode)
-	//	}
-	//    repBody, err := ioutil.ReadAll(resp.Body)
-	//    if err != nil {
-	//		return tg.File{}, err
-	//	}
-	//    err = json.Unmarshal(repBody, &category)
-	//    if err != nil {
-	//		return tg.File{}, err
-	//	}
-
-	//Coger una página aleatoria (cada página tiene 40 posts)
-	rand.Seed(time.Now().Unix())
-	randPage := rand.Intn(65) // Tomamos como total de posts 2500 (hay 3000 y pico), y se divide por 39 para obtener las paginas
-	resp, err := http.Get("http://api.thechive.com/api/category/60?key=" + cmd.Api_key + "&page=" + strconv.Itoa(randPage))
+//Coger numero total de posts  de la categoria 60 'Girls'
+	resp, err := http.Get("http://api.thechive.com/api/category/60?key="+cmd.Api_key)
 	if err != nil {
 		return tg.File{}, err
 	}
@@ -126,7 +106,27 @@ func (cmd *cmdChive) randomPic() (img tg.File, err error) {
 	if resp.StatusCode != http.StatusOK {
 		return tg.File{}, fmt.Errorf("HTTP error: %v (%v)", resp.Status, resp.StatusCode)
 	}
-	repBody, err := ioutil.ReadAll(resp.Body)
+    repBody, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+		return tg.File{}, err
+	}
+    err = json.Unmarshal(repBody, &category)
+    if err != nil {
+		return tg.File{}, err
+	}
+
+	//Coger una página aleatoria (cada página tiene 40 posts)
+	rand.Seed(time.Now().Unix())
+	randPage := rand.Intn(65) // Tomamos como total de posts 2500 (hay 3000 y pico), y se divide por 39 para obtener las paginas
+	resp, err = http.Get("http://api.thechive.com/api/category/60?key=" + cmd.Api_key + "&page=" + strconv.Itoa(randPage))
+	if err != nil {
+		return tg.File{}, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return tg.File{}, fmt.Errorf("HTTP error: %v (%v)", resp.Status, resp.StatusCode)
+	}
+	repBody, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return tg.File{}, err
 	}
@@ -134,10 +134,14 @@ func (cmd *cmdChive) randomPic() (img tg.File, err error) {
 	if err != nil {
 		return tg.File{}, err
 	}
-
+	fmt.Println("-------\n" + string(repBody) + "\n-------\n")
 	//Coger un post aleatorio de la página aleatoria seleccionada
 	rand.Seed(time.Now().Unix())
 	randPost := rand.Intn(39)
+	//fmt.Println("LONGITUD: " + strconv.Itoa(len(category.Posts)))
+	if (len(category.Posts) < randPost+1){
+		return tg.File{}, errors.New("Posts argument empty!")
+	}
 	postNum := category.Posts[randPost].Guid
 
 	resp, err = http.Get("http://api.thechive.com/api/post/" + strconv.Itoa(postNum) + "?key=" + cmd.Api_key)
