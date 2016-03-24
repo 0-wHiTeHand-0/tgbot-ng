@@ -30,7 +30,7 @@ func (cmd *cmdBreak) Match(text string) bool {
 	return cmd.re.MatchString(text)
 }
 
-func (cmd *cmdBreak) Run(chatID, replyID int, text string, from string, reply_ID *tg.Message) error {
+func (cmd *cmdBreak) Run(chatID, replyID int, text string, from tg.User, reply_ID *tg.Message) error {
 	//Compruebo que chatID este permitido
 	flag := false
 	for i := 0; i < len(cmd.config.Allowed); i++ {
@@ -61,8 +61,8 @@ func (cmd *cmdBreak) Run(chatID, replyID int, text string, from string, reply_ID
 		cmd.f_break = cmd.f_break[:0]
 		message = "Breakfast list cleared!"
 	} else {
-		cmd.f_break = append(cmd.f_break, from+": "+m[1])
-		message = from + " wants " + m[1]
+		cmd.f_break = append(cmd.f_break, from.FirstName+": "+m[1])
+		message = from.FirstName + " wants " + m[1]
 	}
 	cmd.cli.SendText(chatID, message)
 	return nil

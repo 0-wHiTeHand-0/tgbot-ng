@@ -99,12 +99,12 @@ func parseConfig(file string) (config, error) {
 	cfg.Commands.fcdg.Path = "cards"
 	cfg.Commands.quote.Enabled = false
 	cfg.Commands.quote.Path = "quotes.txt"
-	cfg.Commands.quote.Allowed = []int{0, 0}
+	cfg.Commands.quote.Allowed = []int{0, 0} //ChatIDs
 	cfg.Commands.voice.Enabled = false
-	cfg.Commands.breakfast.Allowed = []int{0, 0}
+	cfg.Commands.breakfast.Allowed = []int{0, 0} //ChatIDs
 	cfg.Commands.breakfast.Enabled = false
-	cfg.Commands.chive.Enabled = true
+	cfg.Commands.chive.Enabled = false
 	cfg.Commands.ban.Enabled = true
-	cfg.Commands.ban.Allowed = []int{0}
+	cfg.Commands.ban.Allowed = []int{0} //User IDs
 	return cfg, nil
 }

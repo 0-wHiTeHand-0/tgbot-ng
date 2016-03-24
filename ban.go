@@ -31,11 +31,11 @@ func (cmd *cmdBan) Match(text string) bool {
 	return cmd.re.MatchString(text)
 }
 
-func (cmd *cmdBan) Run(chatID, replyID int, text string, from string, reply_ID *tg.Message) error {
-	//Compruebo que chatID este permitido
+func (cmd *cmdBan) Run(chatID, replyID int, text string, from tg.User, reply_ID *tg.Message) error {
+	//Compruebo que el ID este permitido
 	flag := false
 	for i := 0; i < len(cmd.config.Allowed); i++ {
-		if cmd.config.Allowed[i] == chatID {
+		if cmd.config.Allowed[i] == from.ID {
 			flag = true
 			break
 		}

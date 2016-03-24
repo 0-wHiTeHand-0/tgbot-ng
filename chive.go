@@ -35,7 +35,7 @@ func NewCmdChive(config CmdConfigChive, cli *tg.Client) Command {
 	return &cmdChive{
 		re:      regexp.MustCompile(`^/chive(?:@[^ ]+?)?(?:$| +(.+)$)`),
 		config:  config,
-		Api_key: "AKI_KEY",
+		Api_key: "API_KEY",
 		cli:     cli,
 	}
 }
@@ -44,7 +44,7 @@ func (cmd *cmdChive) Match(text string) bool {
 	return cmd.re.MatchString(text)
 }
 
-func (cmd *cmdChive) Run(chatID, replyID int, text string, from string, reply_ID *tg.Message) error {
+func (cmd *cmdChive) Run(chatID, replyID int, text string, from tg.User, reply_ID *tg.Message) error {
 	var (
 		img  tg.File
 		err  error
@@ -97,8 +97,8 @@ func (cmd *cmdChive) randomPic() (img tg.File, err error) {
 		}
 	}
 
-//Coger numero total de posts  de la categoria 60 'Girls'
-	resp, err := http.Get("http://api.thechive.com/api/category/60?key="+cmd.Api_key)
+	//Coger numero total de posts  de la categoria 60 'Girls'
+	resp, err := http.Get("http://api.thechive.com/api/category/60?key=" + cmd.Api_key)
 	if err != nil {
 		return tg.File{}, err
 	}
@@ -106,12 +106,12 @@ func (cmd *cmdChive) randomPic() (img tg.File, err error) {
 	if resp.StatusCode != http.StatusOK {
 		return tg.File{}, fmt.Errorf("HTTP error: %v (%v)", resp.Status, resp.StatusCode)
 	}
-    repBody, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
+	repBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
 		return tg.File{}, err
 	}
-    err = json.Unmarshal(repBody, &category)
-    if err != nil {
+	err = json.Unmarshal(repBody, &category)
+	if err != nil {
 		return tg.File{}, err
 	}
 
@@ -139,7 +139,7 @@ func (cmd *cmdChive) randomPic() (img tg.File, err error) {
 	rand.Seed(time.Now().Unix())
 	randPost := rand.Intn(39)
 	//fmt.Println("LONGITUD: " + strconv.Itoa(len(category.Posts)))
-	if (len(category.Posts) < randPost+1){
+	if len(category.Posts) < randPost+1 {
 		return tg.File{}, errors.New("Posts argument empty!")
 	}
 	postNum := category.Posts[randPost].Guid

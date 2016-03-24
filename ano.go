@@ -47,7 +47,7 @@ func (cmd *cmdAno) Match(text string) bool {
 	return cmd.re.MatchString(text)
 }
 
-func (cmd *cmdAno) Run(chatID, replyID int, text string, from string, reply_ID *tg.Message) error {
+func (cmd *cmdAno) Run(chatID, replyID int, text string, from tg.User, reply_ID *tg.Message) error {
 	var (
 		img  tg.File
 		err  error

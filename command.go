@@ -9,5 +9,5 @@ import (
 
 type Command interface {
 	Match(text string) bool
-	Run(chatID, replyID int, text string, from string, reply_id *tg.Message) error
+	Run(chatID, replyID int, text string, from tg.User, reply_id *tg.Message) error
 }

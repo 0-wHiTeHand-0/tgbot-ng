@@ -33,11 +33,11 @@ func (cmd *cmdVoice) Match(text string) bool {
 	return cmd.re.MatchString(text)
 }
 
-func (cmd *cmdVoice) Run(chatID, replyID int, text string, from string, reply_ID *tg.Message) error {
+func (cmd *cmdVoice) Run(chatID, replyID int, text string, from tg.User, reply_ID *tg.Message) error {
 	var (
 		err error
 	)
-	if len(text) > 45 {
+	if len(text) > 145 {
 		_, err = cmd.cli.SendText(chatID, "Text too large. Don't touch my cyberbowls.")
 	} else {
 		const e_arg string = "-ves+f4"

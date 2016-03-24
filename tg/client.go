@@ -35,7 +35,7 @@ func NewClient(name, token string) *Client {
 
 func (c *Client) GetUpdates() (UpdateResponse, error) {
 	resp, err := http.PostForm(baseURL+c.Token+"/getUpdates",
-		url.Values{"offset": {strconv.Itoa(c.lastUpdateID + 1)}, "timeout": {strconv.Itoa(30)}})
+		url.Values{"offset": {strconv.Itoa(c.lastUpdateID + 1)}, "timeout": {"30"}})
 	if err != nil {
 		return UpdateResponse{}, err
 	}

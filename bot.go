@@ -75,7 +75,7 @@ func (b *bot) handleUpdate(u tg.Update) {
 	}
 	for _, cmd := range b.commands {
 		if cmd.Match(u.Message.Text) {
-			if err := cmd.Run(u.Message.Chat.ID, u.Message.ID, u.Message.Text, u.Message.From.FirstName, u.Message.Reply); err != nil {
+			if err := cmd.Run(u.Message.Chat.ID, u.Message.ID, u.Message.Text, u.Message.From, u.Message.Reply); err != nil {
 				log.Printf("error: %v\n", err)
 				b.cli.SendText(u.Message.Chat.ID, "command error")
 			}

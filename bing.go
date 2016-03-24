@@ -43,7 +43,7 @@ func (cmd *cmdBing) Match(text string) bool {
 	return cmd.re.MatchString(text)
 }
 
-func (cmd *cmdBing) Run(chatID, replyID int, text string, from string, reply_ID *tg.Message) error {
+func (cmd *cmdBing) Run(chatID, replyID int, text string, from tg.User, reply_ID *tg.Message) error {
 	var query string
 
 	m := cmd.re.FindStringSubmatch(text)
