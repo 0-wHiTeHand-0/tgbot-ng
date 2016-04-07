@@ -30,7 +30,8 @@
                         "enabled": false
                 },
 		"chive": {
-			"enabled": true
+			"enabled": true,
+			"api_key": "00000000000000"
 		},
 		"ban": {
 			"enabled": true,

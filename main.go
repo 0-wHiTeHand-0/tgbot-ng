@@ -39,23 +39,23 @@ func main() {
 		tgbot.addCommand(NewCmdBing(cfg.Commands.Bing, tgbot.cli))
 	}
 
-	if cfg.Commands.breakfast.Enabled {
-		tgbot.addCommand(NewCmdBreak(cfg.Commands.breakfast, tgbot.cli))
+	if cfg.Commands.Breakfast.Enabled {
+		tgbot.addCommand(NewCmdBreak(cfg.Commands.Breakfast, tgbot.cli))
 	}
-	if cfg.Commands.fcdg.Enabled {
-		tgbot.addCommand(NewCmd4cdg(cfg.Commands.fcdg, tgbot.cli))
+	if cfg.Commands.Fcdg.Enabled {
+		tgbot.addCommand(NewCmd4cdg(cfg.Commands.Fcdg, tgbot.cli))
 	}
-	if cfg.Commands.quote.Enabled {
-		tgbot.addCommand(NewCmdQuote(cfg.Commands.quote, tgbot.cli))
+	if cfg.Commands.Quote.Enabled {
+		tgbot.addCommand(NewCmdQuote(cfg.Commands.Quote, tgbot.cli))
 	}
-	if cfg.Commands.voice.Enabled {
-		tgbot.addCommand(NewCmdVoice(cfg.Commands.voice, tgbot.cli))
+	if cfg.Commands.Voice.Enabled {
+		tgbot.addCommand(NewCmdVoice(cfg.Commands.Voice, tgbot.cli))
 	}
-	if cfg.Commands.chive.Enabled {
-		tgbot.addCommand(NewCmdChive(cfg.Commands.chive, tgbot.cli))
+	if cfg.Commands.Chive.Enabled {
+		tgbot.addCommand(NewCmdChive(cfg.Commands.Chive, tgbot.cli))
 	}
-	if cfg.Commands.ban.Enabled {
-		tgbot.addCommand(NewCmdBan(cfg.Commands.ban, tgbot.cli))
+	if cfg.Commands.Ban.Enabled {
+		tgbot.addCommand(NewCmdBan(cfg.Commands.Ban, tgbot.cli))
 	}
 	tgbot.loop()
 }
@@ -71,12 +71,12 @@ type config struct {
 type cmdConfigs struct {
 	Ano       CmdConfigAno   `json:"ano"`
 	Bing      CmdConfigBing  `json:"bing"`
-	fcdg      CmdConfig4cdg  `json:"fcdg"`
-	quote     CmdConfigQuote `json:"quote"`
-	voice     CmdConfigVoice `json:"voice"`
-	breakfast CmdConfigBreak `json:"breakfast"`
-	chive     CmdConfigChive `json:"chive"`
-	ban       CmdConfigBan   `json:"ban"`
+	Fcdg      CmdConfig4cdg  `json:"fcdg"`
+	Quote     CmdConfigQuote `json:"quote"`
+	Voice     CmdConfigVoice `json:"voice"`
+	Breakfast CmdConfigBreak `json:"breakfast"`
+	Chive     CmdConfigChive `json:"chive"`
+	Ban       CmdConfigBan   `json:"ban"`
 }
 
 func parseConfig(file string) (config, error) {
@@ -95,16 +95,16 @@ func parseConfig(file string) (config, error) {
 		return config{}, err
 	}
 	log.Println(cfg)
-	cfg.Commands.fcdg.Enabled = false
-	cfg.Commands.fcdg.Path = "cards"
-	cfg.Commands.quote.Enabled = false
-	cfg.Commands.quote.Path = "quotes.txt"
-	cfg.Commands.quote.Allowed = []int{0, 0} //ChatIDs
-	cfg.Commands.voice.Enabled = false
-	cfg.Commands.breakfast.Allowed = []int{0, 0} //ChatIDs
-	cfg.Commands.breakfast.Enabled = false
-	cfg.Commands.chive.Enabled = false
-	cfg.Commands.ban.Enabled = true
-	cfg.Commands.ban.Allowed = []int{0} //User IDs
+//	cfg.Commands.fcdg.Enabled = false
+//	cfg.Commands.fcdg.Path = "cards"
+//	cfg.Commands.quote.Enabled = false
+//	cfg.Commands.quote.Path = "quotes.txt"
+//	cfg.Commands.quote.Allowed = []int{0, 0} //ChatIDs
+//	cfg.Commands.voice.Enabled = false
+//	cfg.Commands.breakfast.Allowed = []int{0, 0} //ChatIDs
+//	cfg.Commands.breakfast.Enabled = false
+//	cfg.Commands.chive.Enabled = false
+//	cfg.Commands.ban.Enabled = true
+//	cfg.Commands.ban.Allowed = []int{0} //User IDs
 	return cfg, nil
 }

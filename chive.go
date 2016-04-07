@@ -22,20 +22,19 @@ import (
 
 type cmdChive struct {
 	re      *regexp.Regexp
-	Api_key string
 	config  CmdConfigChive
 	cli     *tg.Client
 }
 
 type CmdConfigChive struct {
-	Enabled bool `json:"enabled"`
+	Enabled bool	`json:"enabled"`
+	ApiKey	string	`json:"api_key"`
 }
 
 func NewCmdChive(config CmdConfigChive, cli *tg.Client) Command {
 	return &cmdChive{
 		re:      regexp.MustCompile(`^/chive(?:@[^ ]+?)?(?:$| +(.+)$)`),
 		config:  config,
-		Api_key: "API_KEY",
 		cli:     cli,
 	}
 }
@@ -98,7 +97,7 @@ func (cmd *cmdChive) randomPic() (img tg.File, err error) {
 	}
 
 	//Coger numero total de posts  de la categoria 60 'Girls'
-	resp, err := http.Get("http://api.thechive.com/api/category/60?key=" + cmd.Api_key)
+	resp, err := http.Get("http://api.thechive.com/api/category/60?key=" + cmd.config.ApiKey)
 	if err != nil {
 		return tg.File{}, err
 	}
@@ -118,7 +117,7 @@ func (cmd *cmdChive) randomPic() (img tg.File, err error) {
 	//Coger una página aleatoria (cada página tiene 40 posts)
 	rand.Seed(time.Now().Unix())
 	randPage := rand.Intn(65) // Tomamos como total de posts 2500 (hay 3000 y pico), y se divide por 39 para obtener las paginas
-	resp, err = http.Get("http://api.thechive.com/api/category/60?key=" + cmd.Api_key + "&page=" + strconv.Itoa(randPage))
+	resp, err = http.Get("http://api.thechive.com/api/category/60?key=" + cmd.config.ApiKey + "&page=" + strconv.Itoa(randPage))
 	if err != nil {
 		return tg.File{}, err
 	}
@@ -144,7 +143,7 @@ func (cmd *cmdChive) randomPic() (img tg.File, err error) {
 	}
 	postNum := category.Posts[randPost].Guid
 
-	resp, err = http.Get("http://api.thechive.com/api/post/" + strconv.Itoa(postNum) + "?key=" + cmd.Api_key)
+	resp, err = http.Get("http://api.thechive.com/api/post/" + strconv.Itoa(postNum) + "?key=" + cmd.config.ApiKey)
 	if err != nil {
 		return tg.File{}, err
 	}
@@ -202,7 +201,7 @@ func (cmd *cmdChive) searchTag(tag string) (img tg.File, err error) {
 	//fmt.Println(cmd.Api_key)
 
 	//Coger numero total de posts  de la busqueda'
-	resp, err := http.Get("http://api.thechive.com/api/search/" + tag + "?key=" + cmd.Api_key)
+	resp, err := http.Get("http://api.thechive.com/api/search/" + tag + "?key=" + cmd.config.ApiKey)
 	if err != nil {
 		return tg.File{}, err
 	}
@@ -227,7 +226,7 @@ func (cmd *cmdChive) searchTag(tag string) (img tg.File, err error) {
 	}
 	randPost := rand.Intn(category.Post_Count.Total_Posts)
 	postNum := category.Posts[randPost].Guid
-	resp, err = http.Get("http://api.thechive.com/api/post/" + strconv.Itoa(postNum) + "?key=" + cmd.Api_key)
+	resp, err = http.Get("http://api.thechive.com/api/post/" + strconv.Itoa(postNum) + "?key=" + cmd.config.ApiKey)
 	if err != nil {
 		return tg.File{}, err
 	}
