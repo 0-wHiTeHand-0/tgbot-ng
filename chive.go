@@ -97,7 +97,27 @@ func (cmd *cmdChive) randomPic() (img tg.File, err error) {
 	}
 
 	//Coger numero total de posts  de la categoria 60 'Girls'
-	resp, err := http.Get("http://api.thechive.com/api/category/60?key=" + cmd.config.ApiKey)
+	/*resp, err := http.Get("http://api.thechive.com/api/category/60?key=" + cmd.config.ApiKey)
+	if err != nil {
+		return tg.File{}, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return tg.File{}, fmt.Errorf("HTTP error: %v (%v)", resp.Status, resp.StatusCode)
+	}
+	repBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return tg.File{}, err
+	}
+	err = json.Unmarshal(repBody, &category)
+	if err != nil {
+		return tg.File{}, err
+	}*/
+
+	//Coger una página aleatoria (cada página tiene 40 posts)
+	rand.Seed(time.Now().Unix())
+	randPage := rand.Intn(65) // Tomamos como total de posts 2500 (hay 3000 y pico), y se divide por 39 para obtener las paginas
+	resp, err := http.Get("http://api.thechive.com/api/category/404664888?key=" + cmd.config.ApiKey + "&page=" + strconv.Itoa(randPage))
 	if err != nil {
 		return tg.File{}, err
 	}
@@ -113,27 +133,6 @@ func (cmd *cmdChive) randomPic() (img tg.File, err error) {
 	if err != nil {
 		return tg.File{}, err
 	}
-
-	//Coger una página aleatoria (cada página tiene 40 posts)
-	rand.Seed(time.Now().Unix())
-	randPage := rand.Intn(65) // Tomamos como total de posts 2500 (hay 3000 y pico), y se divide por 39 para obtener las paginas
-	resp, err = http.Get("http://api.thechive.com/api/category/60?key=" + cmd.config.ApiKey + "&page=" + strconv.Itoa(randPage))
-	if err != nil {
-		return tg.File{}, err
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return tg.File{}, fmt.Errorf("HTTP error: %v (%v)", resp.Status, resp.StatusCode)
-	}
-	repBody, err = ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return tg.File{}, err
-	}
-	err = json.Unmarshal(repBody, &category)
-	if err != nil {
-		return tg.File{}, err
-	}
-	fmt.Println("-------\n" + string(repBody) + "\n-------\n")
 	//Coger un post aleatorio de la página aleatoria seleccionada
 	rand.Seed(time.Now().Unix())
 	randPost := rand.Intn(39)
