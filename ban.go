@@ -15,11 +15,17 @@ type cmdBan struct {
 }
 
 type CmdConfigBan struct {
-	Enabled bool  `json:"enabled"`
-	Allowed []int `json:"allowed"`
+	Enabled		bool	`json:"enabled"`
+	Allowed		[]int	`json:"allowed"`
+	Pre_Ban_ids	[]int	`json:"pre_banned_ids"`
+	Pre_Ban_time	int	`json:"pre_banned_time"`
 }
 
 func NewCmdBan(config CmdConfigBan, cli *tg.Client) Command {
+	for _, i := range config.Pre_Ban_ids{
+		cli.BannedIDs[i] = time.Now()
+		cli.BannedIDs_min[i] = config.Pre_Ban_time
+	}
 	return &cmdBan{
 		re:     regexp.MustCompile(`^/ban(?: [0-9]+$| -$)`),
 		config: config,
