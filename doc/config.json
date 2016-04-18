@@ -27,7 +27,8 @@
                         "path": "quotes.txt"
                 },
 		"voice": {
-                        "enabled": false
+                        "enabled": false,
+			"espeak_param": "-ves+f2"
                 },
 		"chive": {
 			"enabled": true,

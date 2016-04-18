@@ -18,12 +18,13 @@ type cmdVoice struct {
 }
 
 type CmdConfigVoice struct {
-	Enabled bool `json:"enabled"`
+	Enabled      bool   `json:"enabled"`
+	Espeak_param string `json:"espeak_param"`
 }
 
 func NewCmdVoice(config CmdConfigVoice, cli *tg.Client) Command {
 	return &cmdVoice{
-		re:     regexp.MustCompile(`^/voice(?:$|@[a-zA-Z0-9_]+bot$| [ a-zÁÉÍÓÚáéíóúA-Z0-9.,?!]+$)`),
+		re:     regexp.MustCompile(`^/voice(?:$|@[a-zA-Z0-9_]+bot$| [ a-zÁÉÍÓÚáéíóúñÑA-Z0-9.,?!]+$)`),
 		config: config,
 		cli:    cli,
 	}
@@ -40,8 +41,6 @@ func (cmd *cmdVoice) Run(chatID, replyID int, text string, from tg.User, reply_I
 	if len(text) > 145 {
 		_, err = cmd.cli.SendText(chatID, "Text too large. Don't touch my cyberbowls.")
 	} else {
-		const e_arg string = "-ves+f4"
-
 		m := cmd.re.FindStringSubmatch(text)
 		m = strings.SplitN(m[0], " ", 2)
 		if len(m) < 2 {
@@ -52,7 +51,7 @@ func (cmd *cmdVoice) Run(chatID, replyID int, text string, from tg.User, reply_I
 		texto := re.ReplaceAllString(m[1], " ")
 
 		var stdout1 []byte
-		stdout1, err = exec.Command("espeak", e_arg, "--stdout", "-s125", texto).Output() //No he encontrado la manera de hacer un pipe multiple en go
+		stdout1, err = exec.Command("espeak", cmd.config.Espeak_param, "--stdout", "-s125", texto).Output() //No he encontrado la manera de hacer un pipe multiple en go
 		if err != nil {
 			log.Println("Espeak error. If you want to speak, you must install it.")
 			return err
